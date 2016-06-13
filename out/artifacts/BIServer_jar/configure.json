@@ -1,0 +1,4 @@
+{
+  "/event":"com.yangmuyao.router.EventRouter",
+  "/startup":"com.yangmuyao.router.EventRouter"
+}
