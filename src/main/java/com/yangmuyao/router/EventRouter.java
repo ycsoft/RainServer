@@ -7,6 +7,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.http.*;
+import org.jboss.netty.handler.codec.marshalling.ThreadLocalMarshallerProvider;
 import sun.misc.BASE64Decoder;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class EventRouter implements URLRouter {
         BASE64Decoder           b64  = new BASE64Decoder();
         ChannelBuffer           buf = new DynamicChannelBuffer(16);
         ChannelFuture           future = null;
+
         if ( params.size() <= 0 ){
 
             HttpResponse  res = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.FORBIDDEN);
             future = e.getChannel().write(res);
+
         }else{
             List<String>    lsvalue = params.get("param");
             if ( lsvalue != null && lsvalue.size() > 0){

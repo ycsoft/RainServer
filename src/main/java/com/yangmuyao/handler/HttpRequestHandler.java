@@ -1,7 +1,6 @@
 package com.yangmuyao.handler;
 
 import com.yangmuyao.RouterConfig;
-import com.yangmuyao.router.EventRouter;
 import com.yangmuyao.router.URLRouter;
 import com.yangmuyao.utils.UrlUtils;
 import org.apache.log4j.Logger;
@@ -9,8 +8,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.codec.http.*;
-import org.jboss.netty.handler.codec.http.CookieDecoder;
-import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import org.jboss.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import org.jboss.netty.handler.codec.http.multipart.InterfaceHttpData;
@@ -19,40 +16,30 @@ import org.jboss.netty.util.CharsetUtil;
 import java.util.*;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.*;
-import static org.jboss.netty.handler.codec.http.HttpHeaders.*;
+import static org.jboss.netty.handler.codec.http.HttpHeaders.Values;
 
 /**
  * Created by fengyuyangchen on 16/6/12.
  */
 public class HttpRequestHandler extends SimpleChannelUpstreamHandler{
 
-    private HttpRequest         request;
-    private boolean             readingChunks   = false;
-    private final StringBuilder buf             = new StringBuilder();
-    private  static Logger      log             = Logger.getLogger(HttpRequestHandler.class);
-    private RouterConfig        routerConfig    = new RouterConfig();
+    private HttpRequest                 request;
+    private boolean                     readingChunks   = false;
+    private final StringBuilder         buf             = new StringBuilder();
+    private static Logger               log             = Logger.getLogger(HttpRequestHandler.class);
+    private static RouterConfig         routerConfig    = new RouterConfig();
 
 
     public HttpRequestHandler(){
         super();
-
-        try{
-            //routerConfig.loadConfig("configure.json");
-            routerConfig.setAction("/event",new EventRouter());
-            routerConfig.setAction("/startup",new EventRouter());
-            routerConfig.setAction("/revenue",new EventRouter());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
-
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception{
         if (!readingChunks){
+
             HttpRequest request = this.request = (HttpRequest)e.getMessage();
             String uri = UrlUtils.getPath( request.getUri() );
-
 
             //解析请求参数
             Map<String, List<String>> params = null;

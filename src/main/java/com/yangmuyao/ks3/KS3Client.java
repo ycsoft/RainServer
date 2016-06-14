@@ -10,6 +10,7 @@ import com.ksyun.ks3.service.Ks3;
 import com.ksyun.ks3.service.Ks3Client;
 import com.ksyun.ks3.service.Ks3ClientConfig;
 import com.ksyun.ks3.service.request.PutObjectRequest;
+
 import java.io.File;
 
 public class KS3Client {

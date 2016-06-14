@@ -1,5 +1,6 @@
 package com.yangmuyao.pipeline;
 
+import com.yangmuyao.handler.HttpRequestHandler;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -7,7 +8,6 @@ import org.jboss.netty.handler.codec.http.HttpContentCompressor;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.handler.stream.ChunkedWriteHandler;
-import com.yangmuyao.handler.HttpRequestHandler;
 
 /**
  * Created by fengyuyangchen on 16/6/12.

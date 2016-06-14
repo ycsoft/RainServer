@@ -22,12 +22,23 @@ public class RouterConfig {
 
     private  Map<String, URLRouter>   routers;
 
+    private  Map<String,String>       routerStr;
+
     public    RouterConfig(){
         routers = new HashMap<String, URLRouter>();
+        routerStr = new HashMap<String, String>();
+        try{
+            loadConfig("configure.json");
+        }catch (Exception e){
+
+        }
     }
 
     public Map<String,URLRouter>    getRouters(){
         return routers;
+    }
+    public Map<String,String>       getRouterStr(){
+        return routerStr;
     }
 
     public void setAction(String url, URLRouter router){
@@ -75,8 +86,8 @@ public class RouterConfig {
 
         for ( String key:keys ){
             value = obj.getString(key);
-//            log.debug("Key:"+key+"  Class Name:" + value);
             routers.put(key,(URLRouter)Class.forName(value).newInstance());
+            routerStr.put(key,value);
         }
 
     }

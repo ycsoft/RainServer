@@ -1,6 +1,5 @@
 package com.yangmuyao.test;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.yangmuyao.RouterConfig;
 import com.yangmuyao.router.EventRouter;
 import com.yangmuyao.router.URLRouter;

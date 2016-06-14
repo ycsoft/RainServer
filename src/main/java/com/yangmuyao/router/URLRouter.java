@@ -2,7 +2,6 @@ package com.yangmuyao.router;
 
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 
 import java.util.List;
 import java.util.Map;
