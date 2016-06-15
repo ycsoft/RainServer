@@ -54,6 +54,11 @@ public class FileProcessTask extends TimerTask {
                     cacheFileMap.remove(threadid);
                     //释放锁以后,其他线程将内容写入新文件
                     cacheFileMap.put(threadid,cacheFile);
+                    FilePool.fileHistory.add(cacheFile.filename);
+                    //保存文件列表
+                    ObjectOutputStream  outputStream = new ObjectOutputStream( new FileOutputStream("FileListCache"));
+                    outputStream.writeObject(FilePool.fileHistory);
+                    outputStream.flush();outputStream.close();
                 }
             }
         }catch (Exception e){
