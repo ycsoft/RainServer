@@ -1,13 +1,11 @@
 package com.yangmuyao.router;
 
+import com.yangmuyao.utils.CacheFile;
+import com.yangmuyao.utils.FilePool;
+import com.yangmuyao.utils.RainResponse;
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.DynamicChannelBuffer;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.MessageEvent;
-import org.jboss.netty.handler.codec.http.*;
-import org.jboss.netty.handler.codec.marshalling.ThreadLocalMarshallerProvider;
+import org.jboss.netty.handler.codec.http.HttpRequest;
 import sun.misc.BASE64Decoder;
 
 import java.util.List;
@@ -19,35 +17,40 @@ import java.util.Map;
  */
 public class EventRouter implements URLRouter {
 
-    public            Logger  log = Logger.getLogger(EventRouter.class);
+    public             Logger  log = Logger.getLogger(EventRouter.class);
 
-    public void handleRequest(Map<String,List<String>>  params, HttpRequest req, MessageEvent e) throws Exception{
+    /**
+     *
+     * @param params
+     * @param req
+     * @param e
+     * @throws Exception
+     */
+    public  void handleRequest(Map<String,List<String>>  params, HttpRequest req, MessageEvent e) throws Exception{
 
-        String                 value = null;
-        int                     pos  = 0;
-        BASE64Decoder           b64  = new BASE64Decoder();
-        ChannelBuffer           buf = new DynamicChannelBuffer(16);
-        ChannelFuture           future = null;
+        String                  value   = null;
+        BASE64Decoder           b64     = new BASE64Decoder();
+        long                  threadid  =  Thread.currentThread().getId();
 
         if ( params.size() <= 0 ){
 
-            HttpResponse  res = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.FORBIDDEN);
-            future = e.getChannel().write(res);
+            RainResponse.ResponseFail(e);
 
         }else{
             List<String>    lsvalue = params.get("param");
             if ( lsvalue != null && lsvalue.size() > 0){
+
                 value = lsvalue.get(0);
                 value = new String(b64.decodeBuffer(value));
-                log.debug("base64 decode result:" + value);
-                HttpResponse resp = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                resp.setContent(buf);
-                future = e.getChannel().write(resp);
+                value =  value + "\n";
+
+                FilePool.getFile(threadid).write(value.getBytes());
+
+                RainResponse.ResponseOk(e);
             }
 
         }
 
-        future.addListener(ChannelFutureListener.CLOSE);
     }
 
     public String toString(){

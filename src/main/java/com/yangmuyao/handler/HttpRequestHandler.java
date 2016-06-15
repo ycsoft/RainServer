@@ -2,6 +2,7 @@ package com.yangmuyao.handler;
 
 import com.yangmuyao.RouterConfig;
 import com.yangmuyao.router.URLRouter;
+import com.yangmuyao.utils.RainResponse;
 import com.yangmuyao.utils.UrlUtils;
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -53,9 +54,8 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler{
             if ( router != null ){
                 router.handleRequest(params,request,e);
             }else{
-                HttpResponse resp = new DefaultHttpResponse(HttpVersion.HTTP_1_0,HttpResponseStatus.OK);
-                ChannelFuture future = e.getChannel().write(resp);
-                future.addListener(ChannelFutureListener.CLOSE);
+                log.error("Can not get Router");
+                RainResponse.ResponseFail(e);
             }
             //解析HTTP头
 //            for (Map.Entry<String, String> h: request.headers()){
@@ -172,10 +172,8 @@ public class HttpRequestHandler extends SimpleChannelUpstreamHandler{
                 String key      =  data.getName();
                 String value    = data.toString();
                 int    pos      = value.indexOf("=");
-
                 ls.add(value.substring(pos+1));
                 post.put(key,ls);
-
             }
         }
 

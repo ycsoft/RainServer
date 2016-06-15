@@ -22,11 +22,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="BIServer" />
+        <module name="com.citrusjoy" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="BIServer" target="1.5" />
+      <module name="com.citrusjoy" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

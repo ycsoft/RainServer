@@ -13,7 +13,7 @@ import com.ksyun.ks3.service.request.PutObjectRequest;
 
 import java.io.File;
 
-public class KS3Client {
+public class KS3Client{
 
     private Ks3ClientConfig config;
     private Ks3             client;
@@ -70,5 +70,4 @@ public class KS3Client {
         System.out.println("Length:" + len);
         return  new String (res,0,len);
     }
-
 }
