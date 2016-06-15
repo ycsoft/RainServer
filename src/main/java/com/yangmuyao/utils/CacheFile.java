@@ -79,12 +79,13 @@ public class CacheFile {
                 boolean b = f.delete();
                 if (!b ){
                     System.out.println("Delete File Error");
+                }else{
+                    FilePool.fileHistory.remove(this.filename);
                 }
             }
 
             //生成新的文件名
             this.filename       = "tmp" + File.separator + UUID.randomUUID().toString();
-
             this.outstream      = new BufferedOutputStream( new FileOutputStream(filename) );
             this.inputStream    = new BufferedInputStream( new FileInputStream( filename ));
 
