@@ -1,12 +1,16 @@
 package com.yangmuyao;
 
+import com.yangmuyao.ks3.CloundUpload;
 import com.yangmuyao.ks3.KS3Client;
 import com.yangmuyao.pipeline.HttpServerPipelineFactory;
-import com.yangmuyao.utils.FileProcessTask;
+import com.yangmuyao.utils.CacheTask;
+import com.yangmuyao.utils.Constant;
+import com.yangmuyao.utils.FilePool;
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
@@ -14,8 +18,6 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
-import sun.misc.BASE64Encoder;
-import java.io.File;
 
 /**
  * Created by fengyuyangchen on 16/6/12.
@@ -32,7 +34,7 @@ public class Main {
 
         ObjectInputStream ins = null;
         try{
-            ins  = new ObjectInputStream(new FileInputStream("FileListCache"));
+            ins  = new ObjectInputStream(new FileInputStream(Constant.CacheFile));
         }catch (Exception e){
             log.warn("No Cache File to Deal with");
             return;
@@ -54,10 +56,15 @@ public class Main {
             log.debug("Cache File:" + value);
 
             File f = new File(value);
-            if ( !f.exists() || f.length() == 0 ){
+            if ( !f.exists() ){
                 log.info(value + ":  Skipped");
-            }else{
-                ks3.putFile(f.getName(),value);
+            }else if ( f.length() == 0){
+                log.info(value + ":  Skipped");
+                new File(value).delete();
+            }
+            else{
+                FilePool.executorService.submit(new CloundUpload(value));
+                //ks3.putFile(f.getName(),value);
             }
         }
         ins.close();
@@ -78,7 +85,7 @@ public class Main {
         log.info("Server Has Been Started, Please visit http://127.0.0.1:7001/index.html To See It");
 
         java.util.Timer timer = new Timer();
-        timer.schedule( new FileProcessTask(),1000,1000);
+        timer.schedule( new CacheTask(),1000,1000);
     }
 
 }
