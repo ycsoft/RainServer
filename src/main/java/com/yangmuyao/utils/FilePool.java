@@ -1,14 +1,13 @@
 package com.yangmuyao.utils;
 
-import sun.misc.Queue;
-
 import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by fengyuyangchen on 16/6/14.
@@ -21,9 +20,10 @@ public class FilePool  implements Serializable{
     }
 
     public      static ConcurrentLinkedQueue<String>  fileHistory = new ConcurrentLinkedQueue<String>();
+    public      static ExecutorService  executorService = Executors.newFixedThreadPool(2);
 
     /**
-     *
+     * 根据每个线程的ID,或得该线程对应的缓存文件
      * @param thread_id
      * @return
      * @throws Exception

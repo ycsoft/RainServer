@@ -5,6 +5,9 @@ package com.yangmuyao.utils;
  */
 public class Constant {
 
-    public    static final  int         MaxCacheDataCount    = 100;
+    public    static final  int         MaxCacheDataCount    = 1000;
+    public    static final  int         MaxCacheFileSize     = 1048576;
+
+    public    static final  String      CacheFile            = "tmp/Cache.obj";
 
 }

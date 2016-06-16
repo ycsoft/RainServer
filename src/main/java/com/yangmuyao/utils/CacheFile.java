@@ -1,8 +1,6 @@
 package com.yangmuyao.utils;
 
-import com.sun.deploy.util.SystemUtils;
-import com.sun.prism.shader.Solid_TextureYV12_AlphaTest_Loader;
-import com.yangmuyao.ks3.KS3Client;
+import com.yangmuyao.ks3.CloundUpload;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -41,13 +39,13 @@ public class CacheFile {
             if ( dataCount >= Constant.MaxCacheDataCount){
                 dataCount = 0;
                 outstream.flush(); //写入磁盘,缓存
-                //存储至KS3
-                KS3Client   ks3 = new KS3Client(KS3Client.BEIJING);
-                ks3.setBucket("citrusjoy.matrix.storage");
-                File f = new File(this.filename);
-                ks3.putFile("Garfield/session/" + f.getName(),filename);
+                outstream.close();
+                inputStream.close();
+                String oldname = filename;
                 //将新来的数据转存
                 renew();
+                //存储至KS3
+                FilePool.executorService.submit(new CloundUpload(oldname));
             }
         }
     }
@@ -71,24 +69,11 @@ public class CacheFile {
     public void renew() throws Exception{
 
         synchronized (lock){
-            inputStream.close();
-            outstream.close();
-            //删除文件
-            File f = new File(this.filename);
-            if ( f.isFile() ){
-                boolean b = f.delete();
-                if (!b ){
-                    System.out.println("Delete File Error");
-                }else{
-                    FilePool.fileHistory.remove(this.filename);
-                }
-            }
-
             //生成新的文件名
             this.filename       = "tmp" + File.separator + UUID.randomUUID().toString();
             this.outstream      = new BufferedOutputStream( new FileOutputStream(filename) );
             this.inputStream    = new BufferedInputStream( new FileInputStream( filename ));
-
+            FilePool.fileHistory.add(this.filename);
         }
     }
 
