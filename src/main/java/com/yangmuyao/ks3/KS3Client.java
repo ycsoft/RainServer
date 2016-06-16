@@ -54,13 +54,23 @@ public class KS3Client{
         return this.bucket;
     }
 
-    public void putFile(String key ,String value){
+    public boolean putFile(String key ,String value){
         PutObjectRequest    putObjectRequest  = new PutObjectRequest(bucket,key,new File(value));
-        client.putObject(putObjectRequest);
+        try{
+            client.putObject(putObjectRequest);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
-    public void putSimple(String key, String value){
+    public boolean putSimple(String key, String value){
 
-        client.putObject(bucket,key,value);
+        try {
+            client.putObject(bucket, key, value);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
     public String getSimple(String key) throws Exception{
         GetObjectResult result = client.getObject(bucket,key);
